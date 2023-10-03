@@ -1,0 +1,97 @@
+{% extends 'server/base.html' %}
+
+{% block content %}
+    <div class="d-flex flex-column">
+        {% include 'server/cover_heading.html' with heading='Search' sub_heading='Steam username, Steamid, Steamid64' background='server/images/match_history.jpg' %}
+        
+        <div class="container-fluid bg-light">
+            <div class="mt-3 p-1">
+                <div class="input-group d-flex" style="height:37px">
+                    <input type="text" class="form-control search" style="font-size: 1rem;" placeholder="Search name or steamid64">
+                    <button class="input-group-text btn-success search-btn" id="basic-addon1"><i class="fas fa-search"></i></button>
+                  </div>
+                <hr>
+                <h4>Profiles:</h4>
+                <table class="table ranking">
+                    <thead class="bg-dark text-white">
+                        <th>#</th>
+                        <th>Name</th>
+                    </thead>
+                    <tbody>
+                        {% for profile in result %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>
+                                <a href="{% url 'stats:profile' steam=profile.get_steamid64 %}" class="text-decoration-none">
+                                    {{profile.name}}
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2"><h5 class="text-center">Sorry no results, try searching for your steamid64 or steamid <span class="text-muted"> (76561197960435530 or STEAM_0:0:84901)</span> directly</h5></td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+                <h4>Bans:</h4>
+                <table class="table ranking">
+                    <thead class="bg-dark text-white">
+                        <th>#</th>
+                        <th>Name</th>
+                    </thead>
+                    <tbody>
+                        {% for profile in bans %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>
+                                <a href="{% url 'stats:convert' steam=profile.authid %}" class="text-decoration-none">
+                                    {{profile.name}}
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2"><h5 class="text-center">Sorry no results, try searching for your steamid64 or steamid <span class="text-muted"> (76561197960435530 or STEAM_0:0:84901)</span> directly</h5></td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+                <h4>Comms Bans:</h4>
+                <table class="table ranking">
+                    <thead class="bg-dark text-white">
+                        <th>#</th>
+                        <th>Name</th>
+                    </thead>
+                    <tbody>
+                        {% for profile in comms %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>
+                                <a href="{% url 'stats:convert' steam=profile.authid %}" class="text-decoration-none">
+                                    {{profile.name}}
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2"><h5 class="text-center">Sorry no results, try searching for your steamid64 or steamid <span class="text-muted"> (76561197960435530 or STEAM_0:0:84901)</span> directly</h5></td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+
+{% endblock content %}

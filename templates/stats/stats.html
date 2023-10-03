@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="container-fluid" style="padding-top:80px;font-family: 'Open Sans';">
+    <h1 style="font-family: 'Raleway';font-size: 2.3rem;text-transform: uppercase;">{{ table_title }}</h1>
+    <form class="custom-form" action="" method="get">
+        {{ filter.form }} <button type="submit" class="btn btn-sm theme-btn"><i class="fas fa-search"></i></button>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>PLAYER</th>
+                    <th style="text-align: center;"><span style="color: #e2c000;">POINTS</span></th>
+                    <th style="text-align: center;">KILLS</th>
+                    <th style="text-align: center;">DEATHS</th>
+                    <th style="text-align: center;">K/D</th>
+                    <th style="text-align: center;">HEADSHOTS</th>
+                    <th style="text-align: center;">PLAYTIME</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 0.95rem;">
+                {% for p in filter.qs|slice:':100' %}
+                <tr onclick="location.href='{% url 'stats:profile' p.get_steamid64 %}'" style="cursor: pointer;">
+                    <td style="color: #cbcbcb;">{{forloop.counter }}</td>
+                    <td style="color: #cbcbcb;">{{p.name}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.value}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.kills}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.deaths}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.get_kd}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.headshots}}</td>
+                    <td style="color:#cbcbcb;text-align: center;">{{p.get_playtime}} h.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

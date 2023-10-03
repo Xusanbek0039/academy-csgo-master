@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="container-fluid" style="padding-top: 80px;font-family: 'Open Sans';">
+    <div class="d-flex flex-column">
+        {% for server in servers %}
+        <div class="sidebar-color d-flex flex-row p-1 p-md-3 justify-content-between align-items-center m-1 flex-wrap">
+            <div class="me-auto">{{server.Name}}</div>
+            <div class="ms-2 ms-md-5">{{server.Players}}/{{server.MaxPlayers}}</div>
+            <div class="ms-2 ms-md-5">{{server.ip}}:{{server.port}}<a href="steam://connect/{{server.ip}}:{{server.port}}" class="btn btn-sm theme-btn ms-3">Connect</a></div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="d-flex flex-row justify-content-center my-5 text-center">
+        <div class="m-5 flex-fill ">
+            <h5 class="theme-color text-uppercase" style="font-weight: bold;">Want a Private Server?</h5>
+            <p>Tired of playing with randoms on community servers? <br> Get your own private server of your choice to play
+                with your friends.
+            </p>
+            <a href="https://academy-gaming.com/" target="_blank" class="btn btn-sm theme-btn">Explore Now</a>
+        </div>
+        <div class="" style="min-height: 50px;width: 2px;background-color: #31373f;border-radius: 25px;"></div>
+        <div class="m-5 flex-fill ">
+            <h5 class="theme-color text-uppercase" style="font-weight: bold;">Community Servers Full?</h5>
+            <p>
+                Tired of being auto kicked from community servers? <br> Purchase our premium pass to get undisturbed warmup on our servers.
+            </p>
+            <a href="{% url 'stats:premium' %}" class="btn btn-sm theme-btn">Explore Now</a>
+
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+<script>
+    $('#pre-heading').slideDown(500);
+    $('#suf-heading').show(1000);
+    $('#join-us').slideDown(1500);
+</script>
+{% endblock js %}

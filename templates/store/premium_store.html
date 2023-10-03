@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="container-fluid" style="padding-top:80px;font-family: 'Raleway';">
+  <div class="my-3">
+
+    <div class="row">
+      {% for server in servers %}
+      <div class="col-12 col-md-6 text-center d-flex flex-column theme-color p-2">
+        <div class="card mx-auto server-card" style="border: none;min-width: 25vw;">
+          <img src="{% static 'logo.png' %}" width="200px" alt="" class="mx-auto">
+          <h4 style="font-family:'Gilroy-Bold';margin-top: 0.5rem;">{{server}}</h4>
+          <hr style="height: 1.5px;opacity: 1;">
+          <ul class="list-group bg-transparent" style="text-align: left;">
+            <li class="list-group-item" style="color: #cbcbcb;font-size: 0.9rem;font-weight: bold;"><i
+                class="fas fa-check theme-color me-1"></i> Reserved slot</li>
+            <li class="list-group-item" style="color: #cbcbcb;font-size: 0.9rem;font-weight: bold;"><i
+                class="fas fa-check theme-color me-1"></i> SKINCHANGER (!ws,!knife)</li>
+            <li class="list-group-item" style="color: #cbcbcb;font-size: 0.9rem;font-weight: bold;"><i
+                class="fas fa-check theme-color me-1"></i> PREMIUM tag</li>
+            <li class="list-group-item" style="color: #cbcbcb;font-size: 0.9rem;font-weight: bold;"><i
+                class="fas fa-check theme-color me-1"></i> Priority support</li>
+            <li class="list-group-item" style="color: #cbcbcb;font-size: 0.9rem;font-weight: bold;"><i
+                class="fas fa-check theme-color me-1"></i> Server moderation</li>
+          </ul>
+          <div class="d-flex justify-content-evenly my-3">
+            {% for product in server.products.all %}
+            <button type="button" class="btn theme-btn" data-bs-toggle="modal" data-bs-target="#productModal"
+              data-bs-product="Premium - {{product.title}} Server ({{product.duration}} days)"
+              data-bs-url="{{product.slug}}"><i class="fas fa-cart-plus"></i> {{product.duration}} days</button>
+              {% endfor %}
+              
+            </div>
+            {% if not server.product_in_stock %}
+              Out of stock // Renew available
+            {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col-12">
+        <div class="d-flex flex-row justify-content-center my-5 text-center">
+          <div class="m-5 flex-fill ">
+              <h5 class="theme-color text-uppercase" style="font-weight: bold;">GOT BANNED FROM OUR SERVER?</h5>
+              <p>Did something wrong and got banned from our servers?<br>
+                Appeal for unban to get a chance to play in our servers again.                
+              </p>
+              <a href="{% url 'stats:appeal' %}" class="btn btn-sm theme-btn">Explore Now</a>
+          </div>
+          <div class="" style="min-height: 50px;width: 2px;background-color: #31373f;border-radius: 25px;"></div>
+          <div class="m-5 flex-fill ">
+              <h5 class="theme-color text-uppercase" style="font-weight: bold;">ANYTHING WRONG HAPPENED?</h5>
+              <p>
+                Did anyone do anything against rule in our servers?<br>
+                Report the user and help us punish the users that like breaking rules.                
+              </p>
+              <a href="{% url 'stats:report' %}" class="btn btn-sm theme-btn">Explore Now</a>
+  
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade " data-bs-backdrop="static" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered " id="no-blue">
+  <div class="modal-content checkout-modal">
+    <div class="modal-header" style="border-bottom: 1px solid #cbcbcb70;">
+      <h5 class="modal-title" id="productModalLabel">TITLE</h5>
+      <button type="button" class="btn text-secondary" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="checkout-form" method="POST" autocomplete="off">
+{% csrf_token %}
+
+        <div class="mb-3">
+          <label for="message-text" class="col-form-label">Steam Profile URL:</label>
+          <input type="text" id="product-id" name="product" value="" style="display: none;">
+          <input name="steamid" id="steam-id" class="form-control" style="background: #212529;color: #cbcbcb;font-size: 0.9rem;border: none;"
+            value="http://steamcommunity.com/profiles/{{usersteamid.uid}}"></input>
+          <div id="steamid-help" class="form-text">{% if user.is_authenticated %}Prefilled with you steamID. {% endif %}Don't worry, we will verify the steamID in the next page.</div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer" style="border-top: 1px solid #cbcbcb71;">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <input type="submit" id="submit-checkout" form="checkout-form" class="btn theme-btn" 
+        value="Proceed"></input>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<style>
+  #no-blue input:focus,#no-blue button:focus,#no-blue button:focus-within , #no-blue input:focus-within{
+    outline: none;
+    box-shadow: none;
+  }
+</style>
+
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+<script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  var productModal = document.getElementById('productModal')
+  productModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var product = button.getAttribute('data-bs-product')
+    var url = button.getAttribute('data-bs-url')
+    console.log(url)
+    // Update the modal's content.
+    var modalTitle = productModal.querySelector('.modal-title')
+    var modalForm = productModal.querySelector('#product-id')
+
+    modalTitle.textContent = product
+    modalForm.setAttribute('value',url)
+  });
+</script>
+{% endblock js %}

@@ -1,0 +1,211 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+  <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+  <!-- <link rel="stylesheet" href="{% static 'server/css/notiflix.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'server/css/server.css' %}">
+
+  <title>IT Creative Academy</title>
+  <script src="{% static 'server/js/notiflix-aio-2.7.0.min.js' %}"></script>
+
+</head>
+
+<body style="height: 100%;">
+  <script>
+      Notiflix.Report.Init({
+        'className':'notiflix-report',
+        'backgroundColor':'#31373f',
+        'borderRadius':'10px',
+        'messageColor':'#cbcbcb',
+        'plainText':false,
+        'buttonBackground':'#fddc20',
+        'buttonColor':'#000',
+        success: {
+          'buttonBackground':'#fddc20',
+          'buttonColor':'#000',
+          'svgColor':'#fddc20',
+          'titleColor':'#cbcbcb',
+          'messageColor':'#cbcbcb',
+          'backgroundColor':'#31373f',
+          'backOverlayColor':'rgba(0, 0, 0, 0.5)',},
+        
+      });
+        Notiflix.Notify.Init({
+      'position':'center-top',
+      'timeout':4000,
+      'clickToClose':true
+    });
+  </script>
+  <style>
+    .notiflix-report-button,.notiflix-report-button a{
+        text-decoration: none;
+    }
+</style>
+  {% with usersteamid=user.get_steamid %}
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-brand d-flex my-4">
+      <a href="{% url 'stats:index' %}" class="m-auto">
+        <img src="{% static 'logo.png' %}" alt="AG" class="m-auto" width="180px">
+      </a>
+    </div>
+    <ul class="nav flex-column" id="nav-sidebar">
+      <li class="nav-item">
+        <div class="nav-link" href="#">
+          <button class="btn btn-outline-danger me-auto d-md-none" id="sidebar-toggle-close">X</button>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:index' %}">
+          <span class="round-icon"><i class="fas fa-home"></i></span><span class="icon-text">Bosh saxifa</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:servers' %}">
+          <span class="round-icon"><i class="fas fa-server"></i></span><span class="icon-text">Ariza yozish</span>
+        </a>
+      </li>
+      <li class="nav-item header">
+        Imkoniyatlar
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:premium' %}">
+          <span class="round-icon"><i class="fas fa-crown"></i></span><span class="icon-text">Maxsus paket</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'store:index' %}">
+          <span class="round-icon"><i class="fas fa-store"></i></span><span class="icon-text">Admin bilan aloqa</span>
+        </a>
+      </li>
+      <li class="nav-item header">
+        
+      </li>
+      {% for s in servers_list %}
+        {% if s.stats_db_url %}
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'stats:staticstics' s.display_name %}">
+            <div class="round-icon"><i class="{{s.icon}}"></i></div>
+            <div class="icon-text">{{s.display_name | capfirst }}</div>
+          </a>
+        </li>
+        {% endif %}
+      {% endfor %}
+      <li class="nav-item header">
+        MISC
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:report' %}">
+          <div class="round-icon"><i class="fas fa-clipboard-check"></i></div>
+          <div class="icon-text"></div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:appeal' %}">
+          <span class="round-icon"><i class="fas fa-ban"></i></span><span class="icon-text">Appeal Ban</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'stats:contact' %}">
+          <span class="round-icon"><i class="fas fa-address-book"></i></span><span class="icon-text">Contact Us</span>
+        </a>
+      </li>
+      <li class="nav-item" style="display: none;">
+        <a class="nav-link" aria-current="page" href="/profile/">
+          <span class="round-icon"><i class="fas fa-address-book"></i></span><span class="icon-text">Contact Us</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <button class="btn btn-outline-secondary me-auto d-md-none"
+      style="position: absolute;left: 0;top: 0;margin-top: 25px;margin-left: 10px;" id="sidebar-toggle-open">
+      <i class="fas fa-bars"></i>
+    </button>
+    {% if user.is_authenticated %}
+    {% if usersteamid %}
+    <a class="login-button btn btn-outline-light ms-auto me-3 " href="{% url 'stats:profile' usersteamid.uid %}"
+      style="position: absolute;right: 0;top: 0;margin-top: 25px;">
+      <img style="border-radius: 25px;" src="{{usersteamid.extra_data.player.avatarfull}}" width="25px" alt="PP">
+      {{user.username}}
+      {% else %}
+      <a class="btn btn-outline-light ms-auto me-3 login-button" href="#"
+        style="position: absolute;right: 0;top: 0;margin-top: 25px;">
+        <i class="fas fa-tools"></i>
+        {{user.username}}
+        {% endif %}
+      </a>
+      {% else %}
+      <a class="btn btn-outline-light ms-auto me-3 login-button" href="{% url 'social:begin' 'steam' %}"
+        style="position: absolute;right: 0;top: 0;margin-top: 25px;">
+        <i class="fas fa-sign-in-alt"></i>
+        Login
+      </a>
+      {% endif %}
+
+      {% block content %}
+      {% endblock content %}
+
+  </div>
+
+
+  <!-- BS JS  -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0-rc.1/dist/js.cookie.min.js"></script>
+  <script src="{% static 'server/js/server.js' %}"></script>
+
+  {% block js %}
+  {% endblock js %}
+  {% endwith %}
+
+
+  <script>
+    // Sidebar expand logic
+    $('#sidebar-toggle-close').click(function () {
+      $('.sidebar').hide('show');
+      $('.sidebar').removeClass('open');
+      $('body').removeClass('overflow-hidden');
+    });
+    $('#sidebar-toggle-open').click(function () {
+      $('.sidebar').show('open');
+      $('body').addClass('overflow-hidden');
+    });
+
+  </script>
+  <script>
+    Notiflix.Notify.Init({
+      'position':'center-top',
+      'timeout':4000,
+      'clickToClose':true
+    });
+
+    {% if messages %}
+      {% for message in messages %}
+        Notiflix.Notify.{{ message.extra_tags | capfirst }}('{{message}}');
+      {% endfor %}
+    {% endif %}
+  </script>
+
+</body>
+
+
+
+</html>

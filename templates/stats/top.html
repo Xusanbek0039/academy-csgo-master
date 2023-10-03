@@ -1,0 +1,140 @@
+{% extends 'server/base.html' %}
+{% load timestamp_to_time %}
+{% load seconds_convert %}
+{% load proper_paginate %}
+{% load url_replace %}
+{% load humanize %}
+
+
+{% block content %}
+{% include 'server/cover_heading.html' with heading='Ranks' sub_heading='Top 100 players' background='server/images/rank.jpg' %}
+
+<div class="container">
+  <div class="border bg-light mt-3 p-1">
+    <div class="m-2">
+
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-retake-tab" data-bs-toggle="tab" data-bs-target="#nav-retake"
+              type="button" role="tab" aria-controls="nav-retake" aria-selected="true">Retakes</button>
+            <button class="nav-link" id="nav-1v1-tab" data-bs-toggle="tab" data-bs-target="#nav-1v1"
+              type="button" role="tab" aria-controls="nav-1v1" aria-selected="false">Arena 1v1</button>
+            <button class="nav-link" id="nav-pug-tab" data-bs-toggle="tab" data-bs-target="#nav-pug"
+              type="button" role="tab" aria-controls="nav-pug" aria-selected="false">PUG</button>
+          </div>
+        </nav>
+        <div class="tab-content bg-white" id="nav-tabContent"> <!-- Retake -->
+          <div class="tab-pane fade show active p-4" id="nav-retake" role="tabpanel" aria-labelledby="nav-retake-tab">
+            <div class="table-responsive">
+
+            <table class="table table-hover table-striped table-bordered ranking">
+              <thead >
+                <tr class="bg-dark text-white">
+                  <th class="d-none d-md-table-cell" scope="col">#</th>
+                  <th scope="col">NAME</th>
+                  <th class="d-none d-md-table-cell" scope="col">KILLS</th>
+                  <th class="d-none d-md-table-cell" scope="col">DEATHS</th>
+                  <th class="d-none d-md-table-cell" scope="col">K/D</th>
+                  <th scope="col">SCORE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for player in retake %}
+                <tr>
+
+                  <td class="d-none d-md-table-cell">{{ forloop.counter }}</td>
+                  <td>
+                    <a class="text-decoration-none" href="{% url 'stats:convert' steam=player.steam %}">
+                      <img loading="lazy" src="{{player.get_avatar}}" height="50px" width="50px" style="border-radius: 50%;" class="img-fluid">
+                       {{player.name}}
+                    </a>
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.kills}}
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.deaths}}</td>
+                  <td class="d-none d-md-table-cell">{{player.get_kd}}</td>
+                  <td class=""><span class="badge bg-danger">{{player.value|intcomma}}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          </div>
+          <div class="tab-pane fade p-4" id="nav-1v1" role="tabpanel" aria-labelledby="nav-1v1-tab"> <!-- 1 v 1 -->
+            <table class="table table-hover table-striped table-bordered ranking">
+              <thead>
+                <tr class="bg-dark text-white">
+                  <th class="d-none d-md-table-cell" scope="col">#</th>
+                  <th scope="col">NAME</th>
+                  <th class="d-none d-md-table-cell" scope="col">KILLS</th>
+                  <th class="d-none d-md-table-cell" scope="col">DEATHS</th>
+                  <th class="d-none d-md-table-cell" scope="col">K/D</th>
+                  <th scope="col">SCORE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- populate -->
+                {% for player in arena %}
+                <tr>
+
+                  <td class="d-none d-md-table-cell">{{ forloop.counter }}</td>
+                  <td>
+                    <a class="text-decoration-none" href="{% url 'stats:convert' steam=player.steam %}">
+                      <img loading="lazy" src="{{player.get_avatar}}" height="50px" width="50px" style="border-radius: 50%;" class="img-fluid">
+                      {{player.name}}
+
+                    </a>
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.kills}}
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.deaths}}</td>
+                  <td class="d-none d-md-table-cell">{{player.get_kd}}</td>
+                  <td class=""><span class="badge bg-danger">{{player.value|intcomma}}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade p-4" id="nav-pug" role="tabpanel" aria-labelledby="nav-pug-tab"> <!-- PUG -->
+            <table class="table table-hover table-striped table-bordered ranking">
+              <thead>
+                <tr class="bg-dark text-white">
+                  <th class="d-none d-md-table-cell" scope="col">#</th>
+                  <th scope="col">NAME</th>
+                  <th class="d-none d-md-table-cell" scope="col">WINS</th>
+                  <th class="d-none d-md-table-cell" scope="col">LOSSES</th>
+                  <th class="d-none d-md-table-cell" scope="col">OVERALL</th>
+                  <th scope="col">RATING</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- populate -->
+                {% for player in pug %}
+                <tr>
+
+                  <td class="d-none d-md-table-cell">{{ forloop.counter }}</td>
+                  <td class="" id="{{ player.steam }}" >
+                    <a class="text-decoration-none" href="{% url 'stats:convert' steam=player.steam %}">
+                      <img loading="lazy" src="{{player.get_avatar}}" height="50px" width="50px" style="border-radius: 50%;" class="img-fluid">
+                      {{player.name}}
+
+                    </a>
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.kills}}
+                  </td>
+                  <td class="d-none d-md-table-cell">{{player.deaths}}</td>
+                  <td class="d-none d-md-table-cell">{{player.get_kd}}</td>
+                  <td class=""><span class="badge bg-danger">{{player.value|intcomma}}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

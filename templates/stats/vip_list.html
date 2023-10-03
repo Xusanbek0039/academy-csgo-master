@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="container-fluid" style="padding-top:80px;font-family: 'Open Sans';">
+    <div class="row">
+        {% for vip in vip_list %}
+        <div class="col-12 col-md-4 col-lg-3 p-4">
+            <div class="vip-card">
+                <div class="vip-avatar d-flex text-center ">
+                    <img style="border-radius: 5px;border: 1px solid #31373f;translate: 0px -25px;" class="ms-1"  src="{{vip.avatar}}" height="64px" width="64px" alt="pp">
+                        <h5 class="theme-color text-truncate" style="margin: 0px auto auto auto;padding: 10px;font-weight: bold;">
+                            {{vip.name}}
+                            <br><span style="font-weight: normal;font-size: 0.9rem;color: #cbcbcb;">{{vip.server}}</span>
+                        </h5>
+                </div>
+                <div class="vip-card-body">
+                    Purchased:
+                    <span class="text-muted">
+                        {{vip.dateofpurchase}}
+                    </span>
+                    <br>
+                    Expires:
+                    <span class="text-muted">
+                        {{vip.expires}}
+                    </span>
+                </div>
+                <div class="vip-card-footer text-center theme-color">
+                    <hr>
+                    <span style="margin-bottom: 1rem;font-size: 0.95rem;font-weight: bold;"><i class="far fa-clock"></i> {{vip.to_expire}} days to expire</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

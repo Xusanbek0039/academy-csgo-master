@@ -1,0 +1,33 @@
+{% extends 'server/base.html' %}
+
+{% block content %}
+    <div class="d-flex flex-column">
+        {% include 'server/cover_heading.html' with heading='Server Rules' sub_heading='Our code of conduct' background='server/images/ct.jpg' %}
+        
+        <div class="container">
+            <div class="border bg-light mt-3 p-1" style="font-family: 'Roboto';font-size: 1.1rem;">
+                <div class="m-2 mt-3">
+                    <h3>MAJOR RULES</h3>
+                    <ol>
+                        <li>Any kind of cheating, hacking, scripting is strictly prohibited.</li>
+                        <li>Bug exploitation, glitching is strictly prohibited.</li>
+                        <li>Doxxing, harassing, threats will not be taken lightly.</li>
+                        <li>Being racist and or using racist terms, degrading terms will not be taken lightly</li>
+                    </ol>
+                    <h3>GENERAL SERVER RULES</h3>
+                    <ol>
+                        <li>Do not be toxic.</li>
+                        <li>Do not freeboot other servers</li>
+                        <li>Do not paste any links, urls to all chat.</li>
+                        <li>Do not spam chat or voice.</li>
+                        <li>Do not ghost.</li>
+                        <li>Do not impersonate staff or admins</li>
+                        <li>Please do not target and harass someone for breaking rules, report them to the staff members.</li>
+                    </ol>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+{% endblock content %}

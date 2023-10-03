@@ -1,0 +1,110 @@
+{% extends  'server/base.html' %}
+{% load timestamp_to_time %}
+{% load seconds_convert %}
+{% load proper_paginate %}
+{% load url_replace %}
+{% block content %}
+    {% include 'server/cover_heading.html' with heading='Bans list' sub_heading='Permanant and temporary bans' background='server/images/ct.png' %}
+
+    <div class="container">
+        <div class="border bg-light mt-3 p-1">
+            <div class="m-2">
+              <div class="container d-flex align-items-center">
+                <div class="dropdown">
+                  <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    Per page
+                  </a>
+                
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="?per_page=10">10</a></li>
+                    <li><a class="dropdown-item" href="?per_page=50">50</a></li>
+                    <li><a class="dropdown-item" href="?per_page=100">100</a></li>
+                  </ul>
+                </div>
+
+              <!-- Pagination -->
+                <nav aria-label="Page navigation example" class="ms-auto">
+                  <ul class="pagination" style="margin-bottom: 0px;">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?{% url_replace request 'page' 1 %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                      {% else %}
+                      <li class="page-item disabled">
+                      <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                      {% endif %}
+                    </li>
+                    {% for page in page_obj.paginator|proper_paginate:page_obj.number %}
+                      {% if page == page_obj.number %}
+                      <li class="page-item active"><a class="page-link" href="#">{{page}}</a></li>
+                      {% else %}
+                      <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' page %}">{{page}}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?{% url_replace request 'page' page_obj.paginator.num_pages %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+                <!-- End pagination -->
+
+              </div>
+              <hr>
+                <table class="table">
+                    <thead>
+                      <tr class="bg-dark text-white">
+                        <th class="d-none d-md-table-cell" scope="col">AUTH ID</th>
+                        <th scope="col">NAME</th>
+                        <th class="d-none d-md-table-cell" scope="col">REASON</th>
+                        <th scope="col">EXPIRED/ EXPIRES ON</th>
+                        <th class="d-none d-md-table-cell" scope="col">LENGTH</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for ban in query %}
+                      <tr>
+                        <td class="d-none d-md-table-cell">{{ban.authid}}</td>
+                        <td>
+                          <a href="{% url 'stats:convert' steam=ban.authid %}" class="text-decoration-none">
+
+                            {{ban.name}}
+                          </a>
+                        </td>
+                        <td class="d-none d-md-table-cell">{{ban.reason}}</td>
+                        <td>
+                          <span class="badge rounded-pill bg-secondary">
+                            {{ban.ends|timestamp_to_time|date:"d M Y"}}
+
+                          </span>
+
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                          <span class="badge rounded-pill bg-primary">
+                            {{ban.length|seconds_convert}}
+
+                          </span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+    </div>
+
+{% endblock content %}

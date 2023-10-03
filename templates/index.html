@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<style>
+  #heading{text-shadow: 0 0 1px #fff, 0 0 20px #fff, 0 0 30px #f3ff4d00, 0 0 35px #f3ff4d00, 0 0 40px #f3ff4d, 0 0 45px #f3ff4d00, 0 0 50px #f3ff4d00;}      
+</style>
+
+<div class="container-fluid p-0" style="background-image: url({% static 'landing-min.jpg' %});background-repeat: no-repeat;background-size: cover;background-position: center;">
+  <div>
+    <div class="landing d-flex flex-column">
+      <div class="mx-auto mt-auto text-center pb-5" style="color: var(--icon-text-hover);">
+        <h5 id="pre-heading" style="display: none;color: #fff;">WELCOME TO</h5>
+        <h1 class="display-4" id="heading" style="font-weight: 600;">Academy Gaming</h1>
+        <h6 style="color: var(--icon-text-active);display: none;" id="suf-heading">Counter Strike : Global Offensive</h6>
+        <a class="btn btn-outline-primary" href="https://discord.com/invite/academygaming" target="_blank" id="join-us" style="display: none;">Join Us</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+    $('#pre-heading').slideDown(500);
+    $('#suf-heading').show(1000);
+    $('#join-us').slideDown(1500);
+</script>
+{% endblock js %}

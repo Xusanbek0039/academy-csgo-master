@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="container-fluid" style="padding-top:80px;font-family: 'Open Sans';">
+    <div class="row ms-0 ms-md-5">
+        <div class="col-12 col-md-6">
+            <div class="mb-3">
+
+                <h1 style="font-family: 'Raleway';font-size: 2.3rem;">{{reporttitle}}</h1>
+                <form action=" " method="post" class="custom-form ms-0 ms-md-3">
+                    {% csrf_token %}
+                    {{form|crispy }}
+                        <button class="btn theme-btn ms-auto" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+<div class="container-fluid" style="padding:80px 0px 0px 0px;font-family: 'Open Sans';">
+  <div class="d-flex flex-column">
+    <div class="profile-header mb-5" style="background-image: url({% static 'dust2.png' %});">
+      <div class="overlay">
+        <div class="mt-auto ms-3 d-flex">
+          <img src="{{profile.avatar}}" width="128px" height="128px" alt="Avatar" style="border-radius:100%">
+          <div class="d-flex flex-column ms-1">
+            <div class="m-auto">
+              <h3 class="theme-color">{{profile.nickname}}</h3>
+              <p class="p-0 mt-2 ms-1">
+                {% if profile.is_staff %}
+                <span class="name-tag staff"><i class="fas fa-gavel"></i> Staff</span>
+                {% endif %}
+                {% if profile.is_premium %}
+                <span class="name-tag premium"><i class="fas fa-crown"></i> Premium</span>
+                {% endif %}
+                <span class="name-tag "><i class="fas fa-user"></i> Member</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive mt-1 mb-4 my-5">
+      <table class="table score-data">
+        <tbody>
+          {% for k, v in stats.items %}
+          <tr>
+            <td>
+              <h5>{{k|capfirst}}</h5>
+              <h6>Server</h6>
+            </td>
+            <td>
+              <h5>{{v.rank|default:'-'}}</h5>
+              <h6>Place</h6>
+            </td>
+            <td>
+              <h5>{{v.obj.value|default:'-'}}</h5>
+              <h6>Score</h6>
+
+            </td>
+            <td>
+              <h5>{{v.obj.kills|default:'-'}}</h5>
+              <h6>Kills</h6>
+            </td>
+            <td>
+              <h5>{{v.obj.deaths|default:'-'}}</h5>
+              <h6>Deaths</h6>
+            </td>
+            <td>
+              <h5>{{v.obj.get_kd|default:'-'}}</h5>
+              <h6>K/D</h6>
+            </td>
+            <td>
+              <h5>{{v.obj.headshots|default:'-'}}</h5>
+              <h6>Headshots</h6>
+            </td>
+            <td>
+              <h5>
+                {% if v.obj.get_playtime %}
+                  {{v.obj.get_playtime}}
+                  h.
+                {% else %}
+                -
+                {% endif %}
+              </h5>
+              <h6>Playtime</h6>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="d-flex flex-row justify-content-center my-5 text-center">
+        <div class="m-5 flex-fill ">
+            <h5 class="theme-color text-uppercase" style="font-weight: bold;">Want a Private Server?</h5>
+            <p>Tired of playing with randoms on community servers? <br> Get your own private server of your choice to play
+                with your friends.
+            </p>
+            <a href="https://academy-gaming.com/" target="_blank" class="btn btn-sm theme-btn">Explore Now</a>
+        </div>
+        <div class="" style="min-height: 50px;width: 2px;background-color: #31373f;border-radius: 25px;"></div>
+        <div class="m-5 flex-fill ">
+            <h5 class="theme-color text-uppercase" style="font-weight: bold;">Community Servers Full?</h5>
+            <p>
+                Tired of being auto kicked from community servers? <br> Purchase our premium pass to get undisturbed warmup on our servers.
+            </p>
+            <a href="{% url 'stats:premium' %}" class="btn btn-sm theme-btn">Explore Now</a>
+
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% include 'footer.html' %}
+{% endblock content %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load markdownify %}
+{% csrf_token %}
+
+<div class="container-fluid" style="padding-top:80px;font-family: 'Open Sans';">
+  <div class="d-flex">
+    <div>
+      
+      {{products.first.title}}
+      <p>
+        {{products.first.features | markdownify }}
+      </p>
+    </div>
+    <div>
+      {% for product in products %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal"
+        data-bs-product="{{product.title}} for {{product.duration}} days"
+        data-bs-url="{% url 'store:checkout' product.slug %}">Buy {{product.duration}}</button>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="modal fade " data-bs-backdrop="static" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+      <div class="modal-content checkout-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalLabel">TITLE</h5>
+          <button type="button" class="btn btn-close text-primary" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="checkout-form" method="GET" autocomplete="off">
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Steam profile url:</label>
+              <input name="steamid" id="steam-id" class="form-control"
+                value="http://steamcommunity.com/profiles/{{user.get_steamid}}"></input>
+              <div id="steamid-help" class="form-text">Prefilled with you steamid.Don't worry, we will verify the
+                steamid in the next page</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" id="submit-checkout" form="checkout-form" class="btn btn-primary"
+            value="Proceed to checkout"></input>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+{% include 'footer.html' %}
+{% endblock content %}
+
+{% block js %}
+<script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  var productModal = document.getElementById('productModal')
+  productModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var product = button.getAttribute('data-bs-product')
+    var url = button.getAttribute('data-bs-url')
+    // Update the modal's content.
+    var modalTitle = productModal.querySelector('.modal-title')
+    var modalForm = productModal.querySelector('#checkout-form')
+
+    modalTitle.textContent = product
+    modalForm.setAttribute('action', url)
+  })
+  $('#submit-checkout').click(function (e) {
+    e.preventDefault();
+    form = $('#checkout-form');
+    steamid = $('#steam-id');
+    payload = { 'steamid': steamid.val() }
+    $.ajax({
+      type: "POST",
+      url: '',
+      data: payload,
+      dataType: 'json',
+      headers: { 'X-CSRFToken': csrftoken },
+      statusCode: {
+        200: function (data) {
+          steamid.val(data.steamid)
+          form.submit()
+        }
+      }
+    });
+
+  });
+</script>
+{% endblock js %}
